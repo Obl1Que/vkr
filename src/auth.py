@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
 from db import Connect
 
 
@@ -101,7 +101,11 @@ class Authorization(QtWidgets.QWidget):
                 if Connect(address, port, username, password, db_name):
                     print('Connected!')
                 else:
-                    print('Wrong connecting!')
+                    msg_err = QMessageBox()
+                    msg_err.setWindowTitle("Ошибка")
+                    msg_err.setText(f"Ошибка подключения к базе данных!")
+                    msg_err.setIcon(QMessageBox.Warning)
+                    msg_err.exec_()
 
         elif sender == self.btnClear:
             for _, item in self.labels.items():
