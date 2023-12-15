@@ -93,7 +93,15 @@ class Authorization(QtWidgets.QWidget):
                     in_labels = False
                     break
             if in_labels:
-                print('Connecting!')
+                address = self.inAddress.text()
+                port = self.inPort.text()
+                username = self.inUsername.text()
+                password = self.inPassword.text()
+                db_name = self.inDatabaseName.text()
+                if Connect(address, port, username, password, db_name):
+                    print('Connected!')
+                else:
+                    print('Wrong connecting!')
 
         elif sender == self.btnClear:
             for _, item in self.labels.items():
