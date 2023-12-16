@@ -40,6 +40,10 @@ class Authorization(QtWidgets.QWidget):
                 'label': 'laDatabaseName',
                 'input': 'inDatabaseName'
             },
+            '': {
+                'label': 'laInfo',
+                'input': ''
+            }
         }
 
         buttons = {
@@ -54,14 +58,18 @@ class Authorization(QtWidgets.QWidget):
             setattr(self, input_name['label'], QLabel(self))
             getattr(self, input_name['label']).setMinimumWidth(100)
             getattr(self, input_name['label']).setText(label_text)
-            setattr(self, input_name['input'], QLineEdit(self))
-            getattr(self, input_name['input']).setMinimumWidth(200)
+
+            if input_name['input']:
+                setattr(self, input_name['input'], QLineEdit(self))
+                getattr(self, input_name['input']).setMinimumWidth(200)
 
             layoutInp = QHBoxLayout()
             layoutInp.addStretch(5)
             layoutInp.addWidget(getattr(self, input_name['label']))
-            layoutInp.addStretch(1)
-            layoutInp.addWidget(getattr(self, input_name['input']))
+
+            if input_name['input']:
+                layoutInp.addStretch(1)
+                layoutInp.addWidget(getattr(self, input_name['input']))
             layoutInp.addStretch(5)
             layout.addLayout(layoutInp)
 
@@ -89,7 +97,7 @@ class Authorization(QtWidgets.QWidget):
         if sender == self.btnConnect:
             in_labels = True
             for _, item in self.labels.items():
-                if not getattr(self, item['input']).text():
+                if item['input'] and not getattr(self, item['input']).text():
                     in_labels = False
                     break
             if in_labels:
@@ -100,13 +108,17 @@ class Authorization(QtWidgets.QWidget):
                 db_name = self.inDatabaseName.text()
                 if Connect(address, port, username, password, db_name):
                     print('Connected!')
+                    self.laInfo.setText(f"")
                 else:
                     msg_err = QMessageBox()
                     msg_err.setWindowTitle("Ошибка")
                     msg_err.setText(f"Ошибка подключения к базе данных!")
                     msg_err.setIcon(QMessageBox.Warning)
                     msg_err.exec_()
+                    self.laInfo.setText(f"Ошибка подключения к базе данных!")
 
         elif sender == self.btnClear:
+            self.laInfo.setText(f"")
             for _, item in self.labels.items():
-                getattr(self, item['input']).setText('')
+                if item['input']:
+                    getattr(self, item['input']).setText('')
