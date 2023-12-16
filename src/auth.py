@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
-from db import Connect
+from db import *
 
 
 class Authorization(QtWidgets.QWidget):
@@ -106,7 +106,10 @@ class Authorization(QtWidgets.QWidget):
                 username = self.inUsername.text()
                 password = self.inPassword.text()
                 db_name = self.inDatabaseName.text()
-                if Connect(address, port, username, password, db_name):
+
+                con = Connection(address, port, username, password, db_name)
+
+                if con.con:
                     print('Connected!')
                     self.laInfo.setText(f"")
                 else:
